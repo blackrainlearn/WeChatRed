@@ -2,6 +2,6 @@
     <string name="app_name">微信抢红包</string>
     <string name="setting_button">Setting</string>
     <string name="cancel_button">Cancel</string>
-    <string name="servicelable">微信自动抢红包</string>
-    <string name="description">本插件仅供娱乐，切勿用于不当用途，出现问题后果自负!</string>
+    <string name="servicelable">微信抢红包</string>
+    <string name="description">作者：黑雨! 微信版本6.6.1</string>
 </resources>

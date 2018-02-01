@@ -3,6 +3,7 @@ package com.blackrain.wechatred;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Intent;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -52,20 +53,22 @@ public class RedService extends AccessibilityService
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 break;
-            case AccessibilityEvent.TYPE_WINDOWS_CHANGED:
+            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 String className = event.getClassName().toString();
                 Log.d(TAG, "WINDOWS_CHANGED: " + className);
-                if (className.equals("com.tentcent.mm.ui.LauncherUI"))
+                if (className.equals("com.tencent.mm.ui.LauncherUI"))
                 {
-                    Log.d(TAG, "开始分析红包");
+                    Log.d(TAG, "开始分析红包并点击最后一个红包");
                     getLastPacket();
                 }
                 else if (className.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI"))
                 {
-                    inputClick("com.tencent.mm:id/bg7");
+                    Log.d(TAG, "开红包");
+                    inputClick("com.tencent.mm:id/c2i");
                 }
                 else if (className.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
-                    inputClick("com.tencent.mm:id/gd");
+                    Log.d(TAG, "退出红包");
+                    inputClick("com.tencent.mm:id/ho");
                 }
                 break;
         }
@@ -76,10 +79,12 @@ public class RedService extends AccessibilityService
      */
     private void inputClick(String clickId) {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-        if (nodeInfo != null) {
+        if (nodeInfo != null)
+        {
             List<AccessibilityNodeInfo> list = nodeInfo
                     .findAccessibilityNodeInfosByViewId(clickId);
-            for (AccessibilityNodeInfo item : list) {
+            for (AccessibilityNodeInfo item : list)
+            {
                 item.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
@@ -88,6 +93,7 @@ public class RedService extends AccessibilityService
     private void getLastPacket()
     {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        parents.clear();
         recycle(nodeInfo);
         Log.d(TAG, "红包个数：" + parents.size());
         if (parents.size() > 0)
@@ -95,7 +101,6 @@ public class RedService extends AccessibilityService
             parents.get(parents.size() - 1).performAction(
                     AccessibilityNodeInfo.ACTION_CLICK);
         }
-
     }
 
     ArrayList<AccessibilityNodeInfo> parents = new ArrayList<AccessibilityNodeInfo>();
@@ -109,8 +114,7 @@ public class RedService extends AccessibilityService
         {
             if (info.getText() != null)
             {
-                if ("领取红包".equals(info.getText().toString())
-                        ||"查看红包".equals(info.getText().toString()))
+                if ("领取红包".equals(info.getText().toString()))
                 {
 //					if (info.isClickable()) {
 //						info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -153,5 +157,12 @@ public class RedService extends AccessibilityService
         super.onServiceConnected();
         Toast.makeText(RedService.this, "成功与微信绑定，开始监听", Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent)
+    {
+        Toast.makeText(RedService.this, "与微信解除绑定", Toast.LENGTH_SHORT).show();
+        return super.onUnbind(intent);
     }
 }
