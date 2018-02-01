@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">微信抢红包</string>
-    <string name="setting_button">Setting</string>
-    <string name="cancel_button">Cancel</string>
+    <string name="title_name">注意微信版本6.6.1</string>
+    <string name="use_description">点击服务设置后选择“微信抢红包" 并打开。 作者：黑雨</string>
+    <string name="setting_button">服务设置</string>
     <string name="servicelable">微信抢红包</string>
-    <string name="description">作者：黑雨! 微信版本6.6.1</string>
+    <string name="description">作者：黑雨 微信版本6.6.1！</string>
 </resources>
